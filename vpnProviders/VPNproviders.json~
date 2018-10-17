@@ -1,0 +1,123 @@
+{
+	"pia": {
+		"name": "Private Internet Access",
+		"config": "auto",
+		"statusURL": "https://www.privateinternetaccess.com/pages/network/",
+		"wgetURL": "https://www.privateinternetaccess.com/openvpn/openvpn.zip",
+		"url": "https://www.privateinternetaccess.com/helpdesk/kb/articles/what-s-the-difference-between-the-ovpn-files",
+		"conf": "False",
+		"authPreConfig": "False",
+		"certificateEmbed": "False",
+		"serverNameFormat": ["", ".ovpn"],
+		"speedTest": "True",
+		"speedInfoURL": "https://www.privateinternetaccess.com/pages/network/",
+		"speedURL": "https://www.privateinternetaccess.com/pages/network/"
+	},
+
+	"mullvad": {
+		"name": "Mullvad",
+		"config": "manual",
+		"statusURL": "https://www.mullvad.net/en/servers/",
+		"wgetURL": "NULL",
+		"url": "https://mullvad.net/en/download/config/",
+		"conf": "True",
+		"authPreConfig": "True",
+		"certificateEmbed": "False",
+		"serverNameFormat": ["mullvad_", ".conf"],
+		"speedTest": "False",
+		"speedInfoURL": "https://mullvad.net/en/guides/connection-speed-why-it-so-slow/",
+		"speedURL": "NULL"
+	},
+
+	"express": {
+		"name": "ExpressVPN",
+		"config": "manual",
+		"statusURL": "https://www.expressvpn.com/vpn-server",
+		"wgetURL": "NULL",
+		"url": "https://www.expressvpn.com/support/vpn-setup/manual-config-for-linux-ubuntu-with-openvpn/#download",
+		"conf": "True",
+		"authPreConfig": "False",
+		"certificateEmbed": "False",
+		"speedTest": "False",
+		"speedURL": "NULL",
+		"speedInfoURL": "https://www.expressvpn.com/support/troubleshooting/server-locations/",
+		"serverNameFormat": ["", ".ovpn"]
+	},
+
+	"ipvanish": {
+		"name": "IPVanish",
+		"config": "auto",
+		"statusURL": "https://account.ipvanish.com/index.php?t=Server%20List",
+		"wgetURL": "https://www.ipvanish.com/software/configs/configs.zip",
+		"url": "https://www.ipvanish.com/setup-guides/",
+		"conf": "False",
+		"authPreConfig": "False",
+		"certificateEmbed": "False",
+		"speedTest": "False",
+		"speedURL": "NULL",
+		"speedInfoURL": "https://support.ipvanish.com/hc/en-us/articles/115002075554-What-is-the-best-server-for-me-to-connect-to-",
+		"serverNameFormat": ["ipvanish-", ".ovpn"]
+	},
+	
+	"nord": {
+		"name": "NordVPN",
+		"config": "manual",
+		"statusURL": "https://nordvpn.com/servers/",
+		"wgetURL": "NULL",
+		"url": "https://nordvpn.com/servers/#recommended",
+		"conf": "False",
+		"authPreConfig": "False",
+		"certificateEmbed": "True",
+		"speedTest": "False",
+		"speedURL": "NULL",
+		"speedInfoURL": "https://support.nordvpn.com/#/General-info/Features/1086809762/How-to-find-the-best-server.htm",
+		"serverNameFormat": ["", ".nordvpn.com.udp.ovpn"]
+	},
+
+	"vypr": {
+		"name": "VyprVPN",
+		"config": "auto",
+		"statusURL": "https://support.goldenfrog.com/hc/en-us/articles/360009427492-VyprVPN-Service-Status",
+		"wgetURL": "https://support.goldenfrog.com/hc/article_attachments/360008728172/GF_OpenVPN_10142016.zip",
+		"url": "https://support.goldenfrog.com/hc/en-us/articles/360009425192-Where-can-I-find-the-OpenVPN-files-",
+		"conf": "False",
+		"authPreConfig": "False",
+		"certificateEmbed": "True",
+		"speedTest": "False",
+		"speedURL": "NULL",
+		"speedInfoURL": "https://support.goldenfrog.com/hc/en-us/articles/360009359552-Which-VyprVPN-server-should-I-connect-to-",
+		"serverNameFormat": ["", ".ovpn"]
+	},
+
+	"buffered": {
+		"name": "Buffered VPN",
+		"config": "manual",
+		"statusURL": "https://buffered.com/vpn-server/",
+		"wgetURL": "NULL",
+		"url": "https://buffered.com/tutorials/setup-buffered-vpn-linux/",
+		"conf": "False",
+		"authPreConfig": "True",
+		"certificateEmbed": "True",
+		"speedTest": "False",
+		"speedURL": "NULL",
+		"speedInfoURL": "https://buffered.com/vpn-server/",
+		"serverNameFormat": ["", ".ovpn"]
+	},
+
+	"general": {
+		"name": "VPN Provider",
+		"config": "manual",
+		"statusURL": "NULL",
+		"wgetURL": "NULL",
+		"url": "NULL",
+		"conf": "False",
+		"authPreConfig": "False",
+		"certificateEmbed": "False",
+		"speedTest": "False",
+		"speedURL": "NULL",
+		"speedInfoURL": "NULL",
+		"serverNameFormat": ["", ".ovpn"]
+	}
+}
+	
+	

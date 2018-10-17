@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+  <body>
+  <div class="navbar">
+  <h1>Configure {{name}}</h1>
+  </div>
+  
+  {% if autoConfig %}
+  
+  		<form method="POST" action="/goConfigure/{{vpnChosen}}/">		
+  		<h3>Choose a server</h3>
+  		
+  		{% if speedTest %}
+  			<p>You can test server speeds <a href="{{speedURL}}" target="_blank">here</a></p>
+  		{% endif %}
+  		
+  		<p>Typically the server that is geographically closest to you will be fastest.  Please see <a href="{{speedInfoURL}}" target="_blank">{{name}}</a> for more information.</p>
+  		<select name="selectedServer">
+  		
+  			{% for VPNserver in VPNservers %}
+  				<option value="{{VPNserver}}">{{VPNserver}}</option>
+  			{% endfor %}
+  		
+		</select>
+		
+		<br>
+		<h3>{{name}} login credentials</h3>
+		<input type="text" name="username" value="username" maxlength="30" required>
+		<input type="text" name="password" value="password" maxlength="30" required>
+		<br>
+		<br>
+		<input type="submit" value="Next">
+		</form>
+		
+	{% else %}
+	
+		<h3>Selecting a Server</h3>
+		<p>Typically the server that is geographically closest to you will be fastest.  Please see <a href="{{speedInfoURL}}" target="_blank">{{name}}</a> for more information.</p>
+		<p>Download the OpenVPN configuration file(s) from <a href="{{infoURL}}" target="_blank" >{{name}}</a> and save them.  You <b>do not need to unzip</b> or edit the file(s).</p>
+		
+		{% if speedTest %}
+  			<p>You can test server speeds <a href="{{speedURL}}" target="_blank">here</a></p>
+  		{% endif %}
+  		
+  		
+		<p>Note: you will probably need your login credentials in order to download the file.
+		{% if isMullvad %}
+			You can test Mullvad for 3 hours by getting an account <a href="https://mullvad.net/en/account/create/" target="_blank">here</a>
+		{% endif %}
+		</p>
+		<h3>Upload the ZIP or one file at a time</h3>
+		<p>Click "Browse..." and select the file that you just downloaded.</p>
+		<form method="POST" action="/uploadtest/{{vpnChosen}}/" enctype="multipart/form-data">
+      	<input type=file name=file><input type=submit value=Upload></form>
+      	<p>When you have selected the file click "Upload".  If you are not using a ZIP make sure to repeat this step for each file.</p>
+      	{% if ovpnFound %}
+      	<p>After you've uploaded the files click "Next".</p>
+      	
+    	
+    	<form method="POST" action="/goConfigure/{{vpnChosen}}/" enctype="multipart/form-data">
+    	<input type=submit value=Next>
+    	</form>
+    		{% else %}
+    		
+    		<p><b>You must upload a valid OpenVPN configuration file, *.ovpn or *.conf, to continue.</b></p>
+    		{% endif %}
+    		
+    		<button id="showDetails">Details</button>
+    		 <div id="details" style="display:none;">
+    		<p>Here are the files that were uploaded:</p>
+
+    		<textarea rows="3" cols="80" readonly="True"placeholder="Waiting for upload">{{showUserFiles}}</textarea>
+    		
+    		
+    	 
+	 	
+	   
+	 		
+	 			<textarea rows="3" cols="80" readonly="True">{% if certMissing %}Missing certificate.  Please upload a *.pem or *.crt file.{% else %}{{fileCountDict['certCount']}} certificate(s) found: {{certFounds}}{% endif %}	
+	 			</textarea>
+	 		
+	 			<textarea rows="3" cols="80" readonly="True">{% if authMissing %}Missing authentication.  Please upload a *.txt or *.text file.{% else %}{{fileCountDict['authCount']}} authentication(s) found:{{authFounds}}
+	 			{% endif %}	
+	 			</textarea>
+	 			
+	 			<textarea rows="3" cols="80" readonly="True">{% if ovpnMissing %}Missing OpenVPN configuration.  Please upload a *.ovpn or *.conf file.{% else %}{{fileCountDict['ovpnCount']}} OpenVPN configuration(s) found:{{ovpnFounds}} 	
+	 			{% endif %}	
+	 			</textarea><br>
+	 			
+	 			<form method="POST" action="/rmUploads/{{vpnChosen}}/" enctype="multipart/form-data">
+    	<input type=submit value=Reset>
+    	</form>
+    	</div>
+	 
+	 
+	
+	 	
+    
+  	{% endif %}
+  	
+  	{% if autoConfig %}
+     Click here to refresh OpenVPN configuration files from {{name}}:
+  		<form action="/OVPNzip/" method="post">
+  			<button name="Download PIA OVPN ZIP" type="submit">Download</button>{{populated}}<br><br>	
+  		</form>
+  	{% endif %}
+  	
+  	
+  	<script>
+  	
+
+document.querySelector('#showDetails').onclick = () => {
+    var x = document.getElementById("details");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+
+
+
+
+</script>  
+
+	
+  </body>
+  
+{% endblock %}

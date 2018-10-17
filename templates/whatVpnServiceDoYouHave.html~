@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="navbar">
+<h1>Select your VPN Provider</h1>
+</div>
+<p>You should already have an account open, including a username and password or ID, with the service that you select below:</p>
+<div class="eqi-container">
+  	 <a href="buffered" ><div><img src="{{url_for('static', filename='buffered_logo.jpg')}}" class = "zoom"></img></div></a>
+    <a href="express" ><div><img src="{{url_for('static', filename='express_logo.png')}}"  class = "zoom"</img></div></a>
+    <a href="ipvanish" ><div><img src="{{url_for('static', filename='ipvanish_logo.png')}}"  class = "zoom"</img></div></a>
+    <a href="mullvad" ><div><img src="{{url_for('static', filename='mullvad_logo.jpg')}}"  class = "zoom"</img></div></a>
+  	 <a href="nord" ><div><img src="{{url_for('static', filename='nord_logo.png')}}" class = "zoom"></img></div></a>
+    <a href="pia" ><div><img src="{{url_for('static', filename='pia_logo.png')}}"  class = "zoom"</img></div></a>
+    <a href="vypr" ><div><img src="{{url_for('static', filename='vypr_logo.jpg')}}"  class = "zoom"</img></div></a>
+    <a href="general" ><div><img src="{{url_for('static', filename='openvpn_logo.png')}}"  class = "zoom"</img></div></a>
+    </div>
+
+{% endblock %}

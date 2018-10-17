@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if firstBoot %}
+<div class="navbar">
+   <h1>Welcome to RaspberrySeed!</h1>
+	<h3>First time setup</h3> 
+	</div>
+{% else %}
+<div class="navbar">
+	<h1>RaspberrySeed</h1>
+</div>
+{% endif %}
+{% if vpnChosen %}
+    System Status  
+{% else %}
+    <p>It looks like you need to <a href="/VPNproviders/">choose your VPN service provider.</a>  
+    </p>
+    <p>	   
+    RaspberrySeed is specifically designed for use with a VPN.  If you understand the risks outlined below then continue here to configure your RaspberrySeed without a VPN.
+    </p>
+    <p>
+    If you do not already have an open account with a VPN (Virtual Private Network) service provider, then it is strongly advised that you sign up with one.  The VPN will allow your torrents to download and seed at their full speed without your ISP (Internet Service Provider) arbitrarily throttling your bandwidth.  Without a VPN, your ISP may be able to see what you are torrenting, and if the content violates their terms of service or is illegal, they may reduce your bandwidth, suspend your internet service, or even take legal action.
+    </p> 
+    <h3>Your RaspberrySeed's current public identity</h3>
+    <p>Public IP: {{PublicIP}} | ISP: <b><font color="#FF0000">{{realISP}}</font></b> | Location: <font color="#FF0000"><b>{{City}}</b>, {{Region}}, {{Country}}</font></p> </p>
+    <h3>Compatability</h3>
+    <p>
+    RaspberrySeed relies on OpenVPN and is generally compatible with any VPN service that allows BitTorrent traffic.  Mullvad offers a 3-hour free trial that you may use to test their service and your RaspberrySeed.
+    </p>
+    <h3>Preconfigured for:</h3>
+    <div class="eqi-container">
+  	 <a href="URL" target="_blank"><div><img src="{{url_for('static', filename='buffered_logo.jpg')}}" class = "zoom"></img></div></a>
+    <a href="URL" target="_blank"><div><img src="{{url_for('static', filename='express_logo.png')}}"  class = "zoom"</img></div></a>
+    <a href="URL" target="_blank"><div><img src="{{url_for('static', filename='ipvanish_logo.png')}}"  class = "zoom"</img></div></a>
+    <a href="URL" target="_blank"><div><img src="{{url_for('static', filename='mullvad_logo.jpg')}}"  class = "zoom"</img></div></a>
+  	 <a href="URL" target="_blank"><div><img src="{{url_for('static', filename='nord_logo.png')}}" class = "zoom"></img></div></a>
+    <a href="URL" target="_blank"><div><img src="{{url_for('static', filename='pia_logo.png')}}"  class = "zoom"</img></div></a>
+    <a href="URL" target="_blank"><div><img src="{{url_for('static', filename='vypr_logo.jpg')}}"  class = "zoom"</img></div></a>
+    </div>
+ 	  
+{% endif %}
+    
+    
+    
+    
+
+{% endblock %}

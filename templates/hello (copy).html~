@@ -1,0 +1,27 @@
+<!doctype html>
+
+<title>Hello from Flask</title>
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% else %}
+  <h1>Hello, World!</h1>
+  
+  <body>
+  
+  	System's Current Public IP Address: {{PublicIP}}<br> 
+  	Location:  {{City}}, {{Region}}, {{Country}}<br>
+  	<input type="text"><br>
+  	<form action="/OVPNzip/" method="post">
+  		<button name="Download PIA OVPN ZIP" type="submit">Download PIA OVPN ZIP</button>
+  	
+  	<table>
+  		{% for VPNserver in VPNservers %}
+  			<tr>
+    		<td>{{VPNserver}}</td>
+    		</tr>
+  		{% endfor %}
+	</table>
+  	
+  </body>
+  
+{% endif %}

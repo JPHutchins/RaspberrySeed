@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+ function showConfig() {
+    var x = document.getElementById("editText");
+    if (x.style.display === "block") {
+        x.style.display = "none";
+    } else {
+        x.style.display = "block";
+    }
+}
+
+// Only run what comes next *after* the page has loaded
+addEventListener("DOMContentLoaded", function() {
+
+  // Grab all of the elements with a class of command
+  // (which all of the buttons we just created have)
+  var commandButtons = document.querySelectorAll(".submitConf");
+  for (var i=0, l=commandButtons.length; i<l; i++) {
+    var button = commandButtons[i];
+    // For each button, listen for the "click" event
+    button.addEventListener("click", function(e) {
+      // When a click happens, stop the button
+      // from submitting our form (if we have one)
+      e.preventDefault();
+
+      var clickedButton = e.target;
+      var command = clickedButton.value;
+
+      // Now we need to send the data to our server
+      // without reloading the page - this is the domain of
+      // AJAX (Asynchronous JavaScript And XML)
+      // We will create a new request object
+      // and set up a handler for the response
+      var request = new XMLHttpRequest();
+      request.onload = function() {
+          // We could do more interesting things with the response
+          // or, we could ignore it entirely
+          //alert(request.responseText);
+      };
+      // We point the request at the appropriate command
+      request.open("GET", "/goConfigure/" + command, true);
+      // and then we send it off
+      request.send();
+    });
+  }
+}, true);
+
+</script>  
+
+
+  <div class="navbar">
+  <h1>Complete Configuration</h1>
+  </div>
+  
+  {% if readyToWrite %}
+  <h3>Configuration Successful</h3>
+  
+  <button class="submitConf" value="conf">Save and Test Connection</button><br>
+  
+  <p>You can see configuration details below.</p>
+  
+  
+
+  
+  
+   <button id="buttonHide" onclick="showConfig()">Details</button>
+  
+  
+  
+  <div id="editText" style="display:none;">
+  
+  <p>Saving will complete the following operations:</p>
+  {% for ops in readyToWrite %}
+  		<p>{{ops}}</p>
+  	{% endfor %}
+  <form method="POST" id="editConfig" action="/goConfigure/{{vpnChosen}}/">
+  <textarea cols="60" rows="30" name="config" form="editConfig">{% for line in makeConf %}{{line}}{% endfor %}
+  </textarea><br>
+  <input type="submit" value="Save my changes to the OpenVPN configuration">
+  </form>
+
+  
+  
+   </div>
+  
+ 
+ 
+	{% endif %}  
+  
+  {% if selectServer %}
+  		<form method="POST" action="/goConfigure/{{vpnChosen}}/">		
+  		<h3>Choose a Server</h3>
+  		<p>Typically the server that is geographically closest to you will be fastest.  Please see <a href="{{speedInfoURL}}" target="_blank">{{name}}</a> for more information.</p>
+  		<select name="selectedServerManual">	
+  			{% for VPNserver in VPNservers %}
+  				<option value="{{VPNserver}}">{{VPNserver}}</option>
+  			{% endfor %}
+		</select>
+		<input type="submit" value="Save Server Selection">
+		</form>
+	{% endif %}
+	{% if VPNserversSaved %}
+  <p>Server Selection Saved</p>
+  {% endif %}
+	
+	{% if inputAuth %}
+		<form method="POST" action="/goConfigure/{{vpnChosen}}/">
+		<h3>{{name}} Authentication</h3>
+		<p>It looks like your uploaded files did not contain any authentication information, please enter it here.</p>
+		<input type="text" name="username" value="username" maxlength="30" required>
+		<input type="text" name="password" value="password" maxlength="30" required>
+		<input type="submit" value="Save Username & Password">
+		</form>
+	{% endif %}
+	{% if inputAuthSaved %}
+  <p>Authentication Saved</p>
+  {% endif %}
+	
+	{% if pasteCert %}
+	<form method="POST" action="/goConfigure/{{vpnChosen}}/" id="certInput">
+	<h3>Provide Certificate</h3>
+	<p>It looks like you are missing certificate info from your VPN provider.  You can <a href="/VPNproviders/{{vpnChosen}}/" >go back</a> and upload your certificate files or you can paste the contents of the certificates as specified by your VPN provider below, including ALL formatting such as <i>&lt;ca&gt;-----BEGIN CERTIFICATE-----</i></p>
+	<textarea cols="60" rows="8" name="certificate" form="certInput">Paste certificate here...</textarea>
+	<br>
+  <input type="submit" value = "Save Certificate">
+</form>
+
+
+	{% endif %}
+	
+	{% if pasteCertNotValid %}<p>Certificate not valid, too short.</p>{% endif %}
+	
+	 {% if pasteCertSaved %}
+  <p>Certificate Saved</p>
+  {% endif %}
+ 
+  
+ 
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

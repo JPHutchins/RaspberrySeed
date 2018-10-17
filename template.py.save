@@ -1,0 +1,17 @@
+from flask import render_template
+from flask import Flask
+from urllib.request import urlopen
+import re
+
+app = Flask(__name__)
+
+@app.route('/hello/')
+@app.route('/hello/<name>')
+def hello(name=None):
+	PublicIP = getPublicIPdata
+	return render_template('hello.html', name=name, PublicIP=PublicIP)
+	
+def getPublicIP():
+	data = str(urlopen('http://checkip.dyndns.com/').read())
+	
+	return re.compile(r'(\d+\.\d+\.\d+\.\d+)').search(data).group(1)

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<head>
+<style>
+.eqi-container {
+  display: flex;
+  justify-content: space-between;
+}
+.eqi-container div {
+  width: 300px;
+  height: 100px;
+  background: white;
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.zoom {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+}
+
+.zoom:hover {
+    transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+</style>
+</head>
+
+<div class="eqi-container">
+  <a href="URL"><div><img src="https://assets.pcmag.com/media/images/503767-private-internet-access-vpn-for-linux-logo.jpg?width=333&height=245" class = "zoom"></img></div></a>
+  <div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Logo_of_NordVPN.svg/2000px-Logo_of_NordVPN.svg.png"  class = "zoom"</img></div>
+<div><img src="https://vpnservicepro.com/wp-content/uploads/2018/02/vypr-vpn-logo.jpg"  class = "zoom"</img></div>
+  <div><img src="https://www.lianapress.se/media/userfiles/105484/1490775831/mullvad-logo-rgb-text.jpg"  class = "zoom"</img></div>
+</div>

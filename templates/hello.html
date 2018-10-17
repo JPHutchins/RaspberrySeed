@@ -1,0 +1,20 @@
+<!doctype html>
+
+<title>Hello from Flask</title>
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% else %}
+  <h1>Hello, World!</h1>
+  
+  <body>
+  
+  	System's Current Public IP Address: {{PublicIP}}<br> 
+  	Location:  {{City}}, {{Region}}, {{Country}}<br>
+  	<form action="/servers/">
+  		<button type="submit">Configure your VPN</button>
+  	</form>
+  	
+  	
+  </body>
+  
+{% endif %}

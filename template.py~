@@ -1,0 +1,160 @@
+from flask import render_template
+from flask import Flask, redirect, request, flash, redirect, url_for
+from werkzeug.utils import secure_filename
+from urllib.request import urlopen
+import json
+import requests
+import subprocess
+import os
+
+UPLOAD_FOLDER = './uploads'
+ALLOWED_EXTENSIONS = set(['zip', 'ovpn', 'conf', 'pem', 'text', 'txt', 'crt'])
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = 'my unobvious secret key'
+
+OVPNobtained = 'FALSE'
+
+#need to add a .conf file to save state of program and refresh global variables appropriately
+
+unzipped = []
+otherFiles = []
+VPNservers = []
+populated = ''
+
+def allowed_file(filename):
+	return '.' in filename and \
+        	filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/hello/')
+@app.route('/hello/<name>')
+def hello(name=None):
+
+	data = str(urlopen('http://checkip.dyndns.com/').read())
+	StartMark = '<body>Current IP Address: '
+	EndMark = '</body>'	
+	IPstart = data.find(StartMark) + len(StartMark)
+	IPend = data.find(EndMark)
+	PublicIP = ''
+	for i in range(IPstart, IPend):
+		PublicIP = PublicIP + data[i]
+
+	ipinfoR = requests.get('http://ipinfo.io')
+	ipinfo = json.loads(ipinfoR.text)
+	City = ipinfo["city"]
+	PublicIP = ipinfo["ip"]	
+	Region = ipinfo["region"]
+	Country = ipinfo["country"]
+
+	return render_template('hello.html', name=name, PublicIP=PublicIP, City=City, Region=Region, Country=Country)
+
+@app.route('/servers/')
+def servers():
+		
+	
+
+	if os.path.isdir("./piaOVPN"):
+		unzipped = sorted(os.listdir('./piaOVPN'))
+		for index, VPNserver in enumerate(unzipped):
+			isVPN = os.path.splitext(VPNserver)
+			if isVPN[1] == '.ovpn':
+				VPNservers.append(unzipped[index])
+			else:
+				otherFiles.append(unzipped[index])
+		
+	if len(VPNservers) > 0:
+		populated = str(len(VPNservers)) + ' OVPN configuration files are already downloaded.'
+	else:
+		populated = 'No OVPN configuration files are loaded yet.'
+
+	return render_template('servers.html', VPNservers=VPNservers, populated=populated)
+
+@app.route('/OVPNzip/', methods = ['POST'])
+def ConfigureVPN():
+
+	configURL = 'https://www.privateinternetaccess.com/openvpn/openvpn-ip.zip'
+	subprocess.call(['wget', '-O', 'THISDAZIP.zip', configURL])
+	subprocess.call(['unzip', '-o', 'THISDAZIP.zip', '-d', './piaOVPN'])
+	OVPNobtained = 'TRUE'
+	return redirect('/servers/', code=302)
+
+def StartVPN():
+	
+	subprocess.call("OpenVPNargs") 
+
+@app.route('/configserver/', methods = ['POST'])
+def configserver():
+
+	server = request.form['selectedServer']
+	serverpath = './piaOVPN/' + server
+	servernames = os.path.splitext(server)
+	servername = servernames[0]
+	username = request.form['username']
+	password = request.form['password']
+
+	ovpnFile = open(serverpath, 'r')
+	ovpnList = list(ovpnFile)
+	
+	for index, line in enumerate(ovpnList):
+		if line == 'auth-user-pass\n':
+			ovpnList[index] = 'auth-user-pass auth.text\n'
+		if line == 'crl-verify crl.rsa.2048.pem\n':
+			ovpnList[index] = 'crl-verify /etc/openvpn/crl.rsa.2048.pem\n'
+		if line == 'ca ca.rsa.2048.crt\n':
+			ovpnList[index] = 'ca /etc/openvpn/ca.rsa.2048.crt\n'
+	print(ovpnList)
+
+	confFile = open("/etc/openvpn/" + servername + ".conf", "w")
+	confFile.writelines(ovpnList)
+
+	ovpnFile.close
+	confFile.close
+
+	authFile = open('/etc/openvpn/auth.text', 'w')
+	authFile.write(username + '\n' + password + '\n')
+	authFile.close
+
+	if os.path.isfile('/etc/openvpn/crl.rsa.2048.pem') == False:
+		os.rename('./piaOVPN/crl.rsa.2048.pem', '/etc/openvpn/crl.rsa.2048.pem')
+	if os.path.isfile('/etc/openvpn/ca.rsa.2048.crt') == False:
+		os.rename('./piaOVPN/ca.rsa.2048.crt', '/etc/openvpn/ca.rsa.2048.crt')
+	
+	if os.path.isfile('/etc/openvpn/crl.rsa.2048.pem') and os.path.isfile('/etc/openvpn/ca.rsa.2048.crt') and os.path.isfile("/etc/openvpn/" + servername + ".conf") and os.path.isfile('/etc/openvpn/auth.text'):
+		status = servername + ' VPN has been configured correctly'
+	else:
+		status = servername + ' VPN configuration failed to write files at /etc/openvpn'
+
+
+	return render_template('servers.html', VPNservers=VPNservers, populated=populated, status = status)
+
+@app.route('/configMullvad/', methods = ['POST', 'GET'])
+def configMullvad():
+
+
+	status = ''
+
+	return render_template('servers.html', VPNservers=VPNservers, populated=populated, status = status, filedata=inFileData)
+
+@app.route('/uploadtest/', methods=['GET', 'POST'])
+def upload_file():
+	if request.method == 'POST':
+        	# check if the post request has the file part
+		if 'file' not in request.files:
+			flash('No file part')
+			return redirect(request.url)
+		file = request.files['file']
+        	# if user does not select file, browser also
+       	 	# submit an empty part without filename
+		if file.filename == '':
+			flash('No selected file')
+			return redirect(request.url)
+		if file and allowed_file(file.filename):
+			filename = secure_filename(file.filename)
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		return redirect(url_for('upload_file', filename=filename))
+	status = ''
+	return render_template('servers.html', VPNservers=VPNservers, populated=populated, status=status)
+@app.route('/VPNproviders/')
+def VPNproviders():
+	return render_template('VPNproviders.html')
